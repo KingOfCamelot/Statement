@@ -74,6 +74,7 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         val font = Font(Font.MONOSPACED, Font.TYPE1_FONT, 15)
         val frame = JFrame()
         frame.setSize(500,500)
+        frame.setLocationRelativeTo(null)
         frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE;
         /*val d = JDialog(frame, "poop")
         val l = JLabel()
