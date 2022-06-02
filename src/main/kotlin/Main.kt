@@ -1,6 +1,5 @@
 import java.awt.*
 import javax.swing.*
-import kotlin.system.exitProcess
 
 
 class KotlinSwingSimpleEx(title: String) : JFrame() {
@@ -48,7 +47,7 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         numberStudents.font = font
 
         val button = JButton("Отправить")
-        button.preferredSize = Dimension(500, 20)
+        button.preferredSize = Dimension(1000, 30)
         button.addActionListener()
         {
             val num = tf4.text.toInt()
@@ -60,7 +59,6 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
             dispose()
             enter(text1, students, num, qw)
         }
-
         panel.add(name)
         panel.add(tf)
         panel.add(subject)
@@ -113,11 +111,14 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
 
     private fun test(w: ArrayList<String>, student: ArrayList<String>)
     {
-        val font = Font(Font.MONOSPACED, Font.TYPE1_FONT, 15)
+        val font = Font(Font.MONOSPACED, Font.TYPE1_FONT, 12)
         val frame = JFrame("Ведомость")
-        frame.setSize(500,500)
+        frame.setSize(1000,500)
         frame.setLocationRelativeTo(null)
         frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE;
+
+        val labelSize = Dimension(200,80)
+        val solidBorder = BorderFactory.createLineBorder(Color.BLACK, 1)
 
         val mb = JMenuBar()
         val m1 = JMenu("FILE")
@@ -129,12 +130,41 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
 
         val mainPanel = JPanel()
         mainPanel.layout = BorderLayout()
-        mainPanel.border = BorderFactory.createTitledBorder("Главная информация")
 
-        /*val alignmentPanel = JPanel(FlowLayout())
+        val alignmentPanel = JPanel(FlowLayout())
         alignmentPanel.border = BorderFactory.createTitledBorder("Главная информация")
 
-        mainPanel.add(alignmentPanel, BorderLayout.NORTH)*/
+        val prepod = w[0]
+        val centerLabel = JLabel("<html> <p align=\"center\">Преподаватель: <br>" +
+                "$prepod</p> </html>")
+        centerLabel.verticalAlignment = JLabel.CENTER
+        centerLabel.horizontalAlignment = JLabel.CENTER
+        centerLabel.preferredSize = labelSize
+        centerLabel.border = solidBorder
+        centerLabel.font = font
+        alignmentPanel.add(centerLabel)
+
+        val name = w[1]
+        val centerLabel2 = JLabel("<html> Название предмета: <br>" +
+                "<p align=\"center\">$name</p> </html>")
+        centerLabel2.verticalAlignment = JLabel.CENTER
+        centerLabel2.horizontalAlignment = JLabel.CENTER
+        centerLabel2.preferredSize = labelSize
+        centerLabel2.border = solidBorder
+        centerLabel2.font = font
+        alignmentPanel.add(centerLabel2)
+
+        val num = w[2]
+        val centerLabel3 = JLabel("<html> Номер группы: <br>" +
+                "<p align=\"center\">$num</p> </html>")
+        centerLabel3.verticalAlignment = JLabel.CENTER
+        centerLabel3.horizontalAlignment = JLabel.CENTER
+        centerLabel3.preferredSize = labelSize
+        centerLabel3.border = solidBorder
+        centerLabel3.font = font
+        alignmentPanel.add(centerLabel3)
+
+        mainPanel.add(alignmentPanel, BorderLayout.NORTH)
 
         frame.contentPane.add(BorderLayout.SOUTH, mb)
         frame.contentPane.add(BorderLayout.NORTH, mainPanel)
