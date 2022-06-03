@@ -1,6 +1,7 @@
 import kotlinx.serialization.*
 import java.awt.*
 import javax.swing.*
+import kotlin.system.exitProcess
 
 
 class KotlinSwingSimpleEx(title: String) : JFrame() {
@@ -121,7 +122,7 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         val mb = JMenuBar()
         val m1 = JMenu("FILE")
         mb.add(m1)
-        val m11 = JMenuItem("Сохрнаить в формате json")
+        val m11 = JMenuItem("Сохранить в формате json")
         val m12 = JMenuItem("Сохранить в формате excel")
         m1.add(m11)
         m1.add(m12)
