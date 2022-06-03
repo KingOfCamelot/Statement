@@ -1,3 +1,4 @@
+import kotlinx.serialization.*
 import java.awt.*
 import javax.swing.*
 
@@ -22,10 +23,9 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         }
     }
 
-    private fun dialog(): Component
-    {
-        val text1 : ArrayList<String> = mutableListOf<String>() as ArrayList<String>
-        val students : ArrayList<String> = mutableListOf<String>() as ArrayList<String>
+    private fun dialog(): Component {
+        val text1: ArrayList<String> = mutableListOf<String>() as ArrayList<String>
+        val students: ArrayList<String> = mutableListOf<String>() as ArrayList<String>
         val font = Font(Font.MONOSPACED, Font.ROMAN_BASELINE, 15)
         val panel = JPanel(GridLayout(0, 2, 1, 1))
         panel.isOpaque = false;
@@ -71,10 +71,9 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         return panel
     }
 
-    private fun enter(w: ArrayList<String>, a: ArrayList<String>, num: Int, qw: Int)
-    {
+    private fun enter(w: ArrayList<String>, a: ArrayList<String>, num: Int, qw: Int) {
         val frame = JFrame("Ввод студентов")
-        frame.setSize(500,200)
+        frame.setSize(500, 200)
         frame.setLocationRelativeTo(null)
         frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE;
         frame.isVisible = true
@@ -91,15 +90,15 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         val button = JButton("Ввести следующего студента")
         button.preferredSize = Dimension(100, 25)
         var z = qw
+        if (z == 1) a.add("Список студентов")
         z += 1
         button.addActionListener()
         {
             a.add(tf.text)
             frame.isVisible = false
             if (z > num) {
-                test(w, a)
-            }
-            else enter(w, a, num, z)
+                test(w, a, num)
+            } else enter(w, a, num, z)
         }
 
         mainPanel.add(name)
@@ -109,15 +108,14 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         frame.contentPane.add(button, BorderLayout.SOUTH)
     }
 
-    private fun test(w: ArrayList<String>, student: ArrayList<String>)
-    {
+    private fun test(w: ArrayList<String>, student: ArrayList<String>, numStudent: Int) {
         val font = Font(Font.MONOSPACED, Font.TYPE1_FONT, 12)
         val frame = JFrame("Ведомость")
-        frame.setSize(1000,500)
+        frame.setSize(1200, 500)
         frame.setLocationRelativeTo(null)
         frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE;
 
-        val labelSize = Dimension(200,80)
+        val labelSize = Dimension(200, 80)
         val solidBorder = BorderFactory.createLineBorder(Color.BLACK, 1)
 
         val mb = JMenuBar()
@@ -135,8 +133,10 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         alignmentPanel.border = BorderFactory.createTitledBorder("Главная информация")
 
         val prepod = w[0]
-        val centerLabel = JLabel("<html> <p align=\"center\">Преподаватель: <br>" +
-                "$prepod</p> </html>")
+        val centerLabel = JLabel(
+            "<html> <p align=\"center\">Преподаватель: <br>" +
+                    "$prepod</p> </html>"
+        )
         centerLabel.verticalAlignment = JLabel.CENTER
         centerLabel.horizontalAlignment = JLabel.CENTER
         centerLabel.preferredSize = labelSize
@@ -145,8 +145,10 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         alignmentPanel.add(centerLabel)
 
         val name = w[1]
-        val centerLabel2 = JLabel("<html> Название предмета: <br>" +
-                "<p align=\"center\">$name</p> </html>")
+        val centerLabel2 = JLabel(
+            "<html> <p align=\"center\"> Название предмета: <br>" +
+                    "$name</p> </html>"
+        )
         centerLabel2.verticalAlignment = JLabel.CENTER
         centerLabel2.horizontalAlignment = JLabel.CENTER
         centerLabel2.preferredSize = labelSize
@@ -155,8 +157,10 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         alignmentPanel.add(centerLabel2)
 
         val num = w[2]
-        val centerLabel3 = JLabel("<html> Номер группы: <br>" +
-                "<p align=\"center\">$num</p> </html>")
+        val centerLabel3 = JLabel(
+            "<html> <p align=\"center\"> Номер группы: <br>" +
+                    "$num</p> </html>"
+        )
         centerLabel3.verticalAlignment = JLabel.CENTER
         centerLabel3.horizontalAlignment = JLabel.CENTER
         centerLabel3.preferredSize = labelSize
@@ -166,8 +170,78 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
 
         mainPanel.add(alignmentPanel, BorderLayout.NORTH)
 
+        val numCol = 7
+        val tab = JPanel(GridLayout((numStudent + 1), numCol, 1, 1))
+        val buttons = mutableListOf<MutableList<JButton>>()
+        val nameColumn = mutableListOf<String>(
+            "Контрольная работа 1", "Контрольная работа 2", "Контрольная работа 3",
+            "ИДЗ 1", "ИДЗ 2", "ИДЗ 3", "Дифф. зачёт"
+        )
+        val gradeList = mutableListOf<String>("1", "2", "3", "4", "5")
+        for (i in 0 until (numStudent + 1)) {
+            val buttonsRow = mutableListOf<JButton>()
+            val column = mutableListOf<JLabel>()
+            for (j in 0 until numCol) {
+                if (j == 0) {
+                    val temp = student[i]
+                    val cell = JLabel("<html> <p align=\"center\"> $temp </p> </html>")
+                    cell.border = solidBorder
+                    cell.verticalAlignment = JLabel.CENTER
+                    cell.horizontalAlignment = JLabel.CENTER
+                    column.add(cell)
+                    tab.add(cell)
+                }
+                if (i == 0) {
+                    val temp2 = nameColumn[j]
+                    val cell1 = JLabel("<html> <p align=\"center\"> $temp2 </p> </html>")
+                    cell1.border = solidBorder
+                    cell1.verticalAlignment = JLabel.CENTER
+                    cell1.horizontalAlignment = JLabel.CENTER
+                    column.add(cell1)
+                    tab.add(cell1)
+                    continue
+                }
+                val cellButton = JButton("")
+                //выставление оценки
+                cellButton.addActionListener()
+                {
+                    val d = JDialog(frame, "Оценка")
+                    val tempPanel = JPanel()
+                    tempPanel.layout = GridLayout(5, 1, 1, 1)
+                    d.add(tempPanel, BorderLayout.CENTER)
+                    d.setSize(100, 250)
+                    d.setLocationRelativeTo(null)
+                    for (i in 0 until 5) {
+                        val grade = JButton(gradeList[i])
+                        tempPanel.add(grade)
+                        grade.addActionListener()
+                        {
+                            if (gradeList[i] == "1") {
+                                val a = JDialog(frame, "poop")
+                                a.setLocationRelativeTo(null)
+                                val l = JLabel("Неужели настолько всё плохо?")
+                                l.horizontalAlignment = JLabel.CENTER;
+                                a.add(l)
+                                a.setSize(250, 100)
+                                a.isVisible = true
+                            }
+                            cellButton.text = gradeList[i]
+                            d.isVisible = false
+                        }
+                    }
+                    d.isVisible = true
+                }
+                buttonsRow.add(cellButton)
+                tab.add(cellButton)
+            }
+            buttons.add(buttonsRow)
+        }
+
+
+        mainPanel.add(tab, BorderLayout.CENTER)
+
         frame.contentPane.add(BorderLayout.SOUTH, mb)
-        frame.contentPane.add(BorderLayout.NORTH, mainPanel)
+        frame.contentPane.add(BorderLayout.CENTER, JScrollPane(mainPanel))
         frame.isVisible = true
     }
 }
@@ -181,10 +255,3 @@ private fun createAndShowGUI() {
 fun main() {
     EventQueue.invokeLater(::createAndShowGUI)
 }
-/*val d = JDialog(frame, "poop")
-val l = JLabel()
-l.horizontalAlignment = JLabel.CENTER;
-l.font = font
-d.add(l)
-d.setSize(1000, 1000)
-d.isVisible = true*/
