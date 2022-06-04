@@ -1,4 +1,3 @@
-import kotlinx.serialization.*
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
 import java.awt.*
@@ -7,7 +6,6 @@ import java.io.FileReader
 import java.io.FileWriter
 import java.nio.file.Paths
 import javax.swing.*
-import kotlin.collections.MutableList as MutableList1
 
 
 class KotlinSwingSimpleEx(title: String) : JFrame() {
@@ -139,6 +137,7 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         {
             writeToCSV(numOfStudents)
         }
+
         m1.add(m11)
 
         val mainPanel = JPanel()
@@ -186,7 +185,7 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         mainPanel.add(alignmentPanel, BorderLayout.NORTH)
 
         val tab = JPanel(GridLayout((numOfStudents + 1), numCol, 1, 1))
-        val buttons = mutableListOf<MutableList1<JButton>>()
+        val buttons = mutableListOf<MutableList<JButton>>()
         for (i in 0 until (numOfStudents + 1)) {
             val buttonsRow = mutableListOf<JButton>()
             val column = mutableListOf<JLabel>()
