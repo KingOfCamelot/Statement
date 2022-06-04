@@ -1,6 +1,13 @@
 import kotlinx.serialization.*
+import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.CSVPrinter
 import java.awt.*
+import java.io.BufferedWriter
+import java.io.FileReader
+import java.io.FileWriter
+import java.nio.file.Paths
 import javax.swing.*
+import kotlin.collections.MutableList as MutableList1
 
 
 class KotlinSwingSimpleEx(title: String) : JFrame() {
@@ -23,9 +30,16 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         }
     }
 
+    private val mainInformation: ArrayList<String> = mutableListOf<String>() as ArrayList<String>
+    private val listStudents: ArrayList<String> = mutableListOf<String>() as ArrayList<String>
+    private var nameColumn = mutableListOf<String>(
+        "Контрольная работа 1", "Контрольная работа 2", "Контрольная работа 3",
+        "ИДЗ 1", "ИДЗ 2", "ИДЗ 3", "Дифф. зачёт"
+    )
+    private var gradeList = mutableListOf<String>("1", "2", "3", "4", "5")
+    private val numCol = 7
+    private lateinit var gradeStudent: Array<Array<String>>
     private fun dialog(): Component {
-        val text1: ArrayList<String> = mutableListOf<String>() as ArrayList<String>
-        val students: ArrayList<String> = mutableListOf<String>() as ArrayList<String>
         val font = Font(Font.MONOSPACED, Font.ROMAN_BASELINE, 15)
         val panel = JPanel(GridLayout(0, 2, 1, 1))
         panel.isOpaque = false;
@@ -50,14 +64,15 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         button.preferredSize = Dimension(1000, 30)
         button.addActionListener()
         {
-            val num = tf4.text.toInt()
-            val qw: Int = 1
-            text1.add(tf.text)
-            text1.add(tf2.text)
-            text1.add(tf3.text)
-            text1.add(tf4.text)
+            val numOfStudents = tf4.text.toInt()
+            gradeStudent = Array(numOfStudents) { Array(numCol) { "0" } }
+            val startNum: Int = 1
+            mainInformation.add(tf.text)
+            mainInformation.add(tf2.text)
+            mainInformation.add(tf3.text)
+            mainInformation.add(tf4.text)
             dispose()
-            enter(text1, students, num, qw)
+            enter(numOfStudents, startNum)
         }
         panel.add(name)
         panel.add(tf)
@@ -71,7 +86,7 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         return panel
     }
 
-    private fun enter(w: ArrayList<String>, a: ArrayList<String>, num: Int, qw: Int) {
+    private fun enter(numOfStudents: Int, startNum: Int) {
         val frame = JFrame("Ввод студентов")
         frame.setSize(500, 200)
         frame.setLocationRelativeTo(null)
@@ -80,25 +95,23 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
 
         val mainPanel = JPanel(GridLayout(0, 2, 5, 5))
         val font = Font(Font.MONOSPACED, Font.ROMAN_BASELINE, 15)
-        //mainPanel.layout = BorderLayout()
-        //mainPanel.isOpaque = false;
 
-        val name = JLabel("Введите ФИО $qw студента")
+        val name = JLabel("Введите ФИО $startNum студента")
         val tf = JTextField(15)
         name.font = font
 
         val button = JButton("Ввести следующего студента")
         button.preferredSize = Dimension(100, 25)
-        var z = qw
-        if (z == 1) a.add("Список студентов")
-        z += 1
+        var temp = startNum
+        if (temp == 1) listStudents.add("Список студентов")
+        temp += 1
         button.addActionListener()
         {
-            a.add(tf.text)
+            listStudents.add(tf.text)
             frame.isVisible = false
-            if (z > num) {
-                test(w, a, num)
-            } else enter(w, a, num, z)
+            if (temp > numOfStudents) {
+                test(numOfStudents)
+            } else enter(numOfStudents, temp)
         }
 
         mainPanel.add(name)
@@ -108,7 +121,7 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         frame.contentPane.add(button, BorderLayout.SOUTH)
     }
 
-    private fun test(w: ArrayList<String>, student: ArrayList<String>, numStudent: Int) {
+    private fun test(numOfStudents: Int) {
         val font = Font(Font.MONOSPACED, Font.TYPE1_FONT, 12)
         val frame = JFrame("Ведомость")
         frame.setSize(1200, 500)
@@ -121,10 +134,12 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         val mb = JMenuBar()
         val m1 = JMenu("FILE")
         mb.add(m1)
-        val m11 = JMenuItem("Сохрнаить в формате json")
-        val m12 = JMenuItem("Сохранить в формате excel")
+        val m11 = JMenuItem("Сохранить в формате csv")
+        m11.addActionListener()
+        {
+            writeToCSV(numOfStudents)
+        }
         m1.add(m11)
-        m1.add(m12)
 
         val mainPanel = JPanel()
         mainPanel.layout = BorderLayout()
@@ -132,10 +147,10 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         val alignmentPanel = JPanel(FlowLayout())
         alignmentPanel.border = BorderFactory.createTitledBorder("Главная информация")
 
-        val prepod = w[0]
+        val teacherName = mainInformation[0]
         val centerLabel = JLabel(
             "<html> <p align=\"center\">Преподаватель: <br>" +
-                    "$prepod</p> </html>"
+                    "$teacherName</p> </html>"
         )
         centerLabel.verticalAlignment = JLabel.CENTER
         centerLabel.horizontalAlignment = JLabel.CENTER
@@ -144,10 +159,10 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         centerLabel.font = font
         alignmentPanel.add(centerLabel)
 
-        val name = w[1]
+        val objectName = mainInformation[1]
         val centerLabel2 = JLabel(
             "<html> <p align=\"center\"> Название предмета: <br>" +
-                    "$name</p> </html>"
+                    "$objectName</p> </html>"
         )
         centerLabel2.verticalAlignment = JLabel.CENTER
         centerLabel2.horizontalAlignment = JLabel.CENTER
@@ -156,10 +171,10 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         centerLabel2.font = font
         alignmentPanel.add(centerLabel2)
 
-        val num = w[2]
+        val groupNumber = mainInformation[2]
         val centerLabel3 = JLabel(
             "<html> <p align=\"center\"> Номер группы: <br>" +
-                    "$num</p> </html>"
+                    "$groupNumber</p> </html>"
         )
         centerLabel3.verticalAlignment = JLabel.CENTER
         centerLabel3.horizontalAlignment = JLabel.CENTER
@@ -170,20 +185,14 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
 
         mainPanel.add(alignmentPanel, BorderLayout.NORTH)
 
-        val numCol = 7
-        val tab = JPanel(GridLayout((numStudent + 1), numCol, 1, 1))
-        val buttons = mutableListOf<MutableList<JButton>>()
-        val nameColumn = mutableListOf<String>(
-            "Контрольная работа 1", "Контрольная работа 2", "Контрольная работа 3",
-            "ИДЗ 1", "ИДЗ 2", "ИДЗ 3", "Дифф. зачёт"
-        )
-        val gradeList = mutableListOf<String>("1", "2", "3", "4", "5")
-        for (i in 0 until (numStudent + 1)) {
+        val tab = JPanel(GridLayout((numOfStudents + 1), numCol, 1, 1))
+        val buttons = mutableListOf<MutableList1<JButton>>()
+        for (i in 0 until (numOfStudents + 1)) {
             val buttonsRow = mutableListOf<JButton>()
             val column = mutableListOf<JLabel>()
             for (j in 0 until numCol) {
                 if (j == 0) {
-                    val temp = student[i]
+                    val temp = listStudents[i]
                     val cell = JLabel("<html> <p align=\"center\"> $temp </p> </html>")
                     cell.border = solidBorder
                     cell.verticalAlignment = JLabel.CENTER
@@ -211,12 +220,12 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
                     d.add(tempPanel, BorderLayout.CENTER)
                     d.setSize(100, 250)
                     d.setLocationRelativeTo(null)
-                    for (i in 0 until 5) {
-                        val grade = JButton(gradeList[i])
+                    for (w in 0 until 5) {
+                        val grade = JButton(gradeList[w])
                         tempPanel.add(grade)
                         grade.addActionListener()
                         {
-                            if (gradeList[i] == "1") {
+                            if (gradeList[w] == "1") {
                                 val a = JDialog(frame, "poop")
                                 a.setLocationRelativeTo(null)
                                 val l = JLabel("Неужели настолько всё плохо?")
@@ -225,7 +234,10 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
                                 a.setSize(250, 100)
                                 a.isVisible = true
                             }
-                            cellButton.text = gradeList[i]
+                            cellButton.text = gradeList[w]
+                            gradeStudent[i - 1][j] = gradeList[w]
+                            println(gradeStudent[i - 1][j])
+                            println("$i $j")
                             d.isVisible = false
                         }
                     }
@@ -243,6 +255,32 @@ class KotlinSwingSimpleEx(title: String) : JFrame() {
         frame.contentPane.add(BorderLayout.SOUTH, mb)
         frame.contentPane.add(BorderLayout.CENTER, JScrollPane(mainPanel))
         frame.isVisible = true
+    }
+
+    private fun writeToCSV(a: Int) {
+        val writer = BufferedWriter(FileWriter("test.csv", false));
+        val csvPrinter = CSVPrinter(
+            writer, CSVFormat.DEFAULT
+                .withHeader(
+                    "Список студентов", "Контрольная работа 1", "Контрольная работа 2", "Контрольная работа 3",
+                    "ИДЗ 1", "ИДЗ 2", "ИДЗ 3", "Дифф. зачёт"
+                )
+        );
+        for (i in 0 until a) {
+            val studentInformation: ArrayList<String> = mutableListOf<String>() as ArrayList<String>
+            if (i == 0) studentInformation.add(listStudents[1])
+            else studentInformation.add(listStudents[i + 1])
+            for (j in 0 until numCol) {
+                studentInformation.add(gradeStudent[i][j])
+            }
+            csvPrinter.printRecord(studentInformation);
+        }
+        val infoList: ArrayList<String> = mutableListOf<String>() as ArrayList<String>
+        for (i in 0 until mainInformation.size) infoList.add(mainInformation[i])
+        csvPrinter.printRecord(infoList)
+
+        csvPrinter.flush();
+        csvPrinter.close();
     }
 }
 
