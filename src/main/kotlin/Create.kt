@@ -1,6 +1,6 @@
 import javax.swing.JFrame
 
-fun CreateWindow() {
+fun createWindow() {
     val frame = Statement("Информация")
     frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE;
     frame.isVisible = true

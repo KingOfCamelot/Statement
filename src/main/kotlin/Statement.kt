@@ -18,7 +18,7 @@ class Statement(title: String) : JFrame() {
         setLocationRelativeTo(null)
 
         rootPane.contentPane = JPanel(BorderLayout(10, 10)).apply {
-            add(dialog(), BorderLayout.CENTER)
+            add(enterMainInformation(), BorderLayout.CENTER)
             border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
         }
     }
@@ -33,17 +33,17 @@ class Statement(title: String) : JFrame() {
     private val numCol = 7
     private lateinit var gradeStudent: Array<Array<String>>
 
-    private fun SmallMessageBox(text: String) {
+    private fun smallMessageBox(text: String) {
         val a = JFrame("Сообщение")
         a.setLocationRelativeTo(null)
         val l = JLabel(text)
         l.horizontalAlignment = JLabel.CENTER;
         a.add(l)
-        a.setSize(300, 100)
+        a.setSize(350, 100)
         a.isVisible = true
     }
 
-    private fun dialog(): Component {
+    private fun enterMainInformation(): Component {
         val font = Font(Font.MONOSPACED, Font.ROMAN_BASELINE, 15)
         val panel = JPanel(GridLayout(0, 2, 1, 1))
         panel.isOpaque = false;
@@ -69,16 +69,23 @@ class Statement(title: String) : JFrame() {
         button.addActionListener()
         {
             val numOfStudents = tf4.text.toInt()
-            if (numOfStudents == 0) SmallMessageBox("Введите хотя бы 1 студента.")
+            val limit = 1000000
+            if (numOfStudents > limit)
+            {
+                smallMessageBox("У вас точно больше МИЛЛИОНА человек в классе?")
+            }
             else {
-                gradeStudent = Array(numOfStudents) { Array(numCol) { "0" } }
-                val startNum = 1
-                mainInformation.add(tf.text)
-                mainInformation.add(tf2.text)
-                mainInformation.add(tf3.text)
-                mainInformation.add(tf4.text)
-                dispose()
-                EnterMainInformation(numOfStudents, startNum)
+                if (numOfStudents <= 0) smallMessageBox("Введите хотя бы 1 студента.")
+                else {
+                    gradeStudent = Array(numOfStudents) { Array(numCol) { "0" } }
+                    val startNum = 1
+                    mainInformation.add(tf.text)
+                    mainInformation.add(tf2.text)
+                    mainInformation.add(tf3.text)
+                    mainInformation.add(tf4.text)
+                    dispose()
+                    enterMainInformation(numOfStudents, startNum)
+                }
             }
         }
 
@@ -118,7 +125,7 @@ class Statement(title: String) : JFrame() {
         }
     }
 
-    private fun EnterMainInformation(numOfStudents: Int, startNum: Int) {
+    private fun enterMainInformation(numOfStudents: Int, startNum: Int) {
         val frame = JFrame("Ввод студентов")
         frame.setSize(500, 200)
         frame.setLocationRelativeTo(null)
@@ -142,8 +149,8 @@ class Statement(title: String) : JFrame() {
             listStudents.add(tf.text)
             frame.isVisible = false
             if (temp > numOfStudents) {
-                Grading(numOfStudents)
-            } else EnterMainInformation(numOfStudents, temp)
+                grading(numOfStudents)
+            } else enterMainInformation(numOfStudents, temp)
         }
 
         mainPanel.add(name)
@@ -153,7 +160,7 @@ class Statement(title: String) : JFrame() {
         frame.contentPane.add(button, BorderLayout.SOUTH)
     }
 
-    private fun Grading(numOfStudents: Int) {
+    private fun grading(numOfStudents: Int) {
         val font = Font(Font.MONOSPACED, Font.TYPE1_FONT, 12)
         val frame = JFrame("Ведомость")
         frame.setSize(1200, 500)
@@ -176,46 +183,46 @@ class Statement(title: String) : JFrame() {
         val mainPanel = JPanel()
         mainPanel.layout = BorderLayout()
 
-        val PanelForMainInformation = JPanel(FlowLayout())
-        PanelForMainInformation.border = BorderFactory.createTitledBorder("Главная информация")
+        val panelForMainInformation = JPanel(FlowLayout())
+        panelForMainInformation.border = BorderFactory.createTitledBorder("Главная информация")
 
         val teacherName = mainInformation[0]
         val nameLabel = JLabel(
-            "<html> <p align=\"center\">Преподаватель: <br>" +
-                    "$teacherName</p> </html>"
+            "<html> <p align=\"center\"><font face='consoles'>Преподаватель: <br>" +
+                    "$teacherName</font></p> </html>"
         )
         nameLabel.verticalAlignment = JLabel.CENTER
         nameLabel.horizontalAlignment = JLabel.CENTER
         nameLabel.preferredSize = labelSize
         nameLabel.border = solidBorder
         nameLabel.font = font
-        PanelForMainInformation.add(nameLabel)
+        panelForMainInformation.add(nameLabel)
 
         val objectName = mainInformation[1]
         val objectNameLabel = JLabel(
-            "<html> <p align=\"center\"> Название предмета: <br>" +
-                    "$objectName</p> </html>"
+            "<html> <p align=\"center\"><font face='calibre'> Название предмета: <br>" +
+                    "$objectName</font></p> </html>"
         )
         objectNameLabel.verticalAlignment = JLabel.CENTER
         objectNameLabel.horizontalAlignment = JLabel.CENTER
         objectNameLabel.preferredSize = labelSize
         objectNameLabel.border = solidBorder
         objectNameLabel.font = font
-        PanelForMainInformation.add(objectNameLabel)
+        panelForMainInformation.add(objectNameLabel)
 
         val groupNumber = mainInformation[2]
         val groupNumLabel = JLabel(
-            "<html> <p align=\"center\"> Номер группы: <br>" +
-                    "$groupNumber</p> </html>"
+            "<html> <p align=\"center\"><font face='calibre'> Номер группы: <br>" +
+                    "$groupNumber</font></p> </html>"
         )
         groupNumLabel.verticalAlignment = JLabel.CENTER
         groupNumLabel.horizontalAlignment = JLabel.CENTER
         groupNumLabel.preferredSize = labelSize
         groupNumLabel.border = solidBorder
         groupNumLabel.font = font
-        PanelForMainInformation.add(groupNumLabel)
+        panelForMainInformation.add(groupNumLabel)
 
-        mainPanel.add(PanelForMainInformation, BorderLayout.NORTH)
+        mainPanel.add(panelForMainInformation, BorderLayout.NORTH)
 
         val tab = JPanel(GridLayout((numOfStudents + 1), numCol, 1, 1))
         val buttons = mutableListOf<MutableList<JButton>>()
@@ -254,7 +261,7 @@ class Statement(title: String) : JFrame() {
                         tempPanel.add(grade)
                         grade.addActionListener()
                         {
-                            if (gradeList[w] == "1") SmallMessageBox("Неужели настолько всё плохо?")
+                            if (gradeList[w] == "1") smallMessageBox("Неужели настолько всё плохо?")
                             cellButton.text = gradeList[w]
                             gradeStudent[i - 1][j] = gradeList[w]
                             box.isVisible = false
@@ -267,7 +274,6 @@ class Statement(title: String) : JFrame() {
             }
             buttons.add(buttonsRow)
         }
-
 
         mainPanel.add(tab, BorderLayout.CENTER)
 
