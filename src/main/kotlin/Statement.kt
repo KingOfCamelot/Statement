@@ -181,8 +181,8 @@ class Statement(title: String) : JFrame() {
 
         val teacherName = mainInformation[0]
         val nameLabel = JLabel(
-            "<html> <p align=\"center\">Преподаватель: <br>" +
-                    "$teacherName</p> </html>"
+            "<html> <p align=\"center\"><font face='calibri'>Преподаватель: <br>" +
+                    "$teacherName</font></p> </html>"
         )
         nameLabel.verticalAlignment = JLabel.CENTER
         nameLabel.horizontalAlignment = JLabel.CENTER
@@ -193,8 +193,8 @@ class Statement(title: String) : JFrame() {
 
         val objectName = mainInformation[1]
         val objectNameLabel = JLabel(
-            "<html> <p align=\"center\"> Название предмета: <br>" +
-                    "$objectName</p> </html>"
+            "<html> <p align=\"center\"><font face='calibri'> Название предмета: <br>" +
+                    "$objectName</font></p> </html>"
         )
         objectNameLabel.verticalAlignment = JLabel.CENTER
         objectNameLabel.horizontalAlignment = JLabel.CENTER
@@ -205,8 +205,8 @@ class Statement(title: String) : JFrame() {
 
         val groupNumber = mainInformation[2]
         val groupNumLabel = JLabel(
-            "<html> <p align=\"center\"> Номер группы: <br>" +
-                    "$groupNumber</p> </html>"
+            "<html> <p align=\"center\"><font face='calibri'> Номер группы: <br>" +
+                    "$groupNumber</font></p> </html>"
         )
         groupNumLabel.verticalAlignment = JLabel.CENTER
         groupNumLabel.horizontalAlignment = JLabel.CENTER
