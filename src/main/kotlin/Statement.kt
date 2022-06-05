@@ -32,6 +32,17 @@ class Statement(title: String) : JFrame() {
     private var gradeList = mutableListOf("1", "2", "3", "4", "5")
     private val numCol = 7
     private lateinit var gradeStudent: Array<Array<String>>
+
+    private fun SmallMessageBox(text: String) {
+        val a = JFrame("Сообщение")
+        a.setLocationRelativeTo(null)
+        val l = JLabel(text)
+        l.horizontalAlignment = JLabel.CENTER;
+        a.add(l)
+        a.setSize(300, 100)
+        a.isVisible = true
+    }
+
     private fun dialog(): Component {
         val font = Font(Font.MONOSPACED, Font.ROMAN_BASELINE, 15)
         val panel = JPanel(GridLayout(0, 2, 1, 1))
@@ -58,16 +69,8 @@ class Statement(title: String) : JFrame() {
         button.addActionListener()
         {
             val numOfStudents = tf4.text.toInt()
-            if (numOfStudents == 0) {
-                val a = JFrame("")
-                a.setLocationRelativeTo(null)
-                val l = JLabel("Введите хотя бы 1 студента")
-                l.horizontalAlignment = JLabel.CENTER;
-                a.add(l)
-                a.setSize(250, 100)
-                a.isVisible = true
-
-            } else {
+            if (numOfStudents == 0) SmallMessageBox("Введите хотя бы 1 студента.")
+            else {
                 gradeStudent = Array(numOfStudents) { Array(numCol) { "0" } }
                 val startNum = 1
                 mainInformation.add(tf.text)
@@ -75,7 +78,7 @@ class Statement(title: String) : JFrame() {
                 mainInformation.add(tf3.text)
                 mainInformation.add(tf4.text)
                 dispose()
-                enter(numOfStudents, startNum)
+                EnterMainInformation(numOfStudents, startNum)
             }
         }
 
@@ -115,7 +118,7 @@ class Statement(title: String) : JFrame() {
         }
     }
 
-    private fun enter(numOfStudents: Int, startNum: Int) {
+    private fun EnterMainInformation(numOfStudents: Int, startNum: Int) {
         val frame = JFrame("Ввод студентов")
         frame.setSize(500, 200)
         frame.setLocationRelativeTo(null)
@@ -139,8 +142,8 @@ class Statement(title: String) : JFrame() {
             listStudents.add(tf.text)
             frame.isVisible = false
             if (temp > numOfStudents) {
-                test(numOfStudents)
-            } else enter(numOfStudents, temp)
+                Grading(numOfStudents)
+            } else EnterMainInformation(numOfStudents, temp)
         }
 
         mainPanel.add(name)
@@ -150,7 +153,7 @@ class Statement(title: String) : JFrame() {
         frame.contentPane.add(button, BorderLayout.SOUTH)
     }
 
-    private fun test(numOfStudents: Int) {
+    private fun Grading(numOfStudents: Int) {
         val font = Font(Font.MONOSPACED, Font.TYPE1_FONT, 12)
         val frame = JFrame("Ведомость")
         frame.setSize(1200, 500)
@@ -160,116 +163,104 @@ class Statement(title: String) : JFrame() {
         val labelSize = Dimension(200, 80)
         val solidBorder = BorderFactory.createLineBorder(Color.BLACK, 1)
 
-        val mb = JMenuBar()
-        val m1 = JMenu("FILE")
-        mb.add(m1)
-        val m11 = JMenuItem("Сохранить в формате csv")
-        m11.addActionListener()
+        val menuBar = JMenuBar()
+        val function = JMenu("FILE")
+        menuBar.add(function)
+        val menuBarFunction1 = JMenuItem("Сохранить в формате csv")
+        menuBarFunction1.addActionListener()
         {
             writeToCSV(numOfStudents)
         }
-
-        m1.add(m11)
+        function.add(menuBarFunction1)
 
         val mainPanel = JPanel()
         mainPanel.layout = BorderLayout()
 
-        val alignmentPanel = JPanel(FlowLayout())
-        alignmentPanel.border = BorderFactory.createTitledBorder("Главная информация")
+        val PanelForMainInformation = JPanel(FlowLayout())
+        PanelForMainInformation.border = BorderFactory.createTitledBorder("Главная информация")
 
         val teacherName = mainInformation[0]
-        val centerLabel = JLabel(
+        val nameLabel = JLabel(
             "<html> <p align=\"center\">Преподаватель: <br>" +
                     "$teacherName</p> </html>"
         )
-        centerLabel.verticalAlignment = JLabel.CENTER
-        centerLabel.horizontalAlignment = JLabel.CENTER
-        centerLabel.preferredSize = labelSize
-        centerLabel.border = solidBorder
-        centerLabel.font = font
-        alignmentPanel.add(centerLabel)
+        nameLabel.verticalAlignment = JLabel.CENTER
+        nameLabel.horizontalAlignment = JLabel.CENTER
+        nameLabel.preferredSize = labelSize
+        nameLabel.border = solidBorder
+        nameLabel.font = font
+        PanelForMainInformation.add(nameLabel)
 
         val objectName = mainInformation[1]
-        val centerLabel2 = JLabel(
+        val objectNameLabel = JLabel(
             "<html> <p align=\"center\"> Название предмета: <br>" +
                     "$objectName</p> </html>"
         )
-        centerLabel2.verticalAlignment = JLabel.CENTER
-        centerLabel2.horizontalAlignment = JLabel.CENTER
-        centerLabel2.preferredSize = labelSize
-        centerLabel2.border = solidBorder
-        centerLabel2.font = font
-        alignmentPanel.add(centerLabel2)
+        objectNameLabel.verticalAlignment = JLabel.CENTER
+        objectNameLabel.horizontalAlignment = JLabel.CENTER
+        objectNameLabel.preferredSize = labelSize
+        objectNameLabel.border = solidBorder
+        objectNameLabel.font = font
+        PanelForMainInformation.add(objectNameLabel)
 
         val groupNumber = mainInformation[2]
-        val centerLabel3 = JLabel(
+        val groupNumLabel = JLabel(
             "<html> <p align=\"center\"> Номер группы: <br>" +
                     "$groupNumber</p> </html>"
         )
-        centerLabel3.verticalAlignment = JLabel.CENTER
-        centerLabel3.horizontalAlignment = JLabel.CENTER
-        centerLabel3.preferredSize = labelSize
-        centerLabel3.border = solidBorder
-        centerLabel3.font = font
-        alignmentPanel.add(centerLabel3)
+        groupNumLabel.verticalAlignment = JLabel.CENTER
+        groupNumLabel.horizontalAlignment = JLabel.CENTER
+        groupNumLabel.preferredSize = labelSize
+        groupNumLabel.border = solidBorder
+        groupNumLabel.font = font
+        PanelForMainInformation.add(groupNumLabel)
 
-        mainPanel.add(alignmentPanel, BorderLayout.NORTH)
+        mainPanel.add(PanelForMainInformation, BorderLayout.NORTH)
 
         val tab = JPanel(GridLayout((numOfStudents + 1), numCol, 1, 1))
         val buttons = mutableListOf<MutableList<JButton>>()
         for (i in 0 until (numOfStudents + 1)) {
             val buttonsRow = mutableListOf<JButton>()
-            val column = mutableListOf<JLabel>()
             for (j in 0 until numCol) {
                 if (j == 0) {
-                    val temp = listStudents[i]
-                    val cell = JLabel("<html> <p align=\"center\"> $temp </p> </html>")
+                    val tempListStudents = listStudents[i]
+                    val cell = JLabel("<html> <p align=\"center\"> $tempListStudents </p> </html>")
                     cell.border = solidBorder
                     cell.verticalAlignment = JLabel.CENTER
                     cell.horizontalAlignment = JLabel.CENTER
-                    column.add(cell)
                     tab.add(cell)
                 }
                 if (i == 0) {
-                    val temp2 = nameColumn[j]
-                    val cell1 = JLabel("<html> <p align=\"center\"> $temp2 </p> </html>")
-                    cell1.border = solidBorder
-                    cell1.verticalAlignment = JLabel.CENTER
-                    cell1.horizontalAlignment = JLabel.CENTER
-                    column.add(cell1)
-                    tab.add(cell1)
+                    val tempNameColumn = nameColumn[j]
+                    val cell = JLabel("<html> <p align=\"center\"> $tempNameColumn </p> </html>")
+                    cell.border = solidBorder
+                    cell.verticalAlignment = JLabel.CENTER
+                    cell.horizontalAlignment = JLabel.CENTER
+                    tab.add(cell)
                     continue
                 }
                 val cellButton = JButton("")
                 //выставление оценки
                 cellButton.addActionListener()
                 {
-                    val d = JDialog(frame, "Оценка")
+                    val box = JDialog(frame, "Оценка")
                     val tempPanel = JPanel()
                     tempPanel.layout = GridLayout(5, 1, 1, 1)
-                    d.add(tempPanel, BorderLayout.CENTER)
-                    d.setSize(100, 250)
-                    d.setLocationRelativeTo(null)
-                    for (w in 0 until 5) {
+                    box.add(tempPanel, BorderLayout.CENTER)
+                    box.setSize(100, 250)
+                    box.setLocationRelativeTo(null)
+                    for (w in 0 until gradeList.size) {
                         val grade = JButton(gradeList[w])
                         tempPanel.add(grade)
                         grade.addActionListener()
                         {
-                            if (gradeList[w] == "1") {
-                                val a = JDialog(frame, "poop")
-                                a.setLocationRelativeTo(null)
-                                val l = JLabel("Неужели настолько всё плохо?")
-                                l.horizontalAlignment = JLabel.CENTER;
-                                a.add(l)
-                                a.setSize(250, 100)
-                                a.isVisible = true
-                            }
+                            if (gradeList[w] == "1") SmallMessageBox("Неужели настолько всё плохо?")
                             cellButton.text = gradeList[w]
                             gradeStudent[i - 1][j] = gradeList[w]
-                            d.isVisible = false
+                            box.isVisible = false
                         }
                     }
-                    d.isVisible = true
+                    box.isVisible = true
                 }
                 buttonsRow.add(cellButton)
                 tab.add(cellButton)
@@ -280,12 +271,12 @@ class Statement(title: String) : JFrame() {
 
         mainPanel.add(tab, BorderLayout.CENTER)
 
-        frame.contentPane.add(BorderLayout.SOUTH, mb)
+        frame.contentPane.add(BorderLayout.SOUTH, menuBar)
         frame.contentPane.add(BorderLayout.CENTER, JScrollPane(mainPanel))
         frame.isVisible = true
     }
 
-    private fun writeToCSV(a: Int) {
+    private fun writeToCSV(num: Int) {
         val writer = BufferedWriter(FileWriter("test.csv", false));
         val csvPrinter = CSVPrinter(
             writer, CSVFormat.DEFAULT
@@ -294,7 +285,7 @@ class Statement(title: String) : JFrame() {
                     "ИДЗ 1", "ИДЗ 2", "ИДЗ 3", "Дифф. зачёт"
                 )
         );
-        for (i in 0 until a) {
+        for (i in 0 until num) {
             val studentInformation: ArrayList<String> = mutableListOf<String>() as ArrayList<String>
             if (i == 0) studentInformation.add(listStudents[1])
             else studentInformation.add(listStudents[i + 1])
