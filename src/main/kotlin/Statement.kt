@@ -70,11 +70,9 @@ class Statement(title: String) : JFrame() {
         {
             val numOfStudents = tf4.text.toInt()
             val limit = 1000000
-            if (numOfStudents > limit)
-            {
+            if (numOfStudents > limit) {
                 smallMessageBox("У вас точно больше МИЛЛИОНА человек в классе?")
-            }
-            else {
+            } else {
                 if (numOfStudents <= 0) smallMessageBox("Введите хотя бы 1 студента.")
                 else {
                     gradeStudent = Array(numOfStudents) { Array(numCol) { "0" } }
@@ -298,7 +296,7 @@ class Statement(title: String) : JFrame() {
             for (j in 0 until numCol) {
                 studentInformation.add(gradeStudent[i][j])
             }
-            csvPrinter.printRecord(studentInformation);
+            csvPrinter.printRecord(studentInformation)
         }
         val infoList: ArrayList<String> = mutableListOf<String>() as ArrayList<String>
         for (i in 0 until mainInformation.size) infoList.add(mainInformation[i])
