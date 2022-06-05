@@ -3,7 +3,6 @@ import java.awt.*
 import java.io.*
 import javax.swing.*
 
-
 class Statement(title: String) : JFrame() {
 
     init {
@@ -59,8 +58,7 @@ class Statement(title: String) : JFrame() {
         button.addActionListener()
         {
             val numOfStudents = tf4.text.toInt()
-            if (numOfStudents == 0)
-            {
+            if (numOfStudents == 0) {
                 val a = JFrame("")
                 a.setLocationRelativeTo(null)
                 val l = JLabel("Введите хотя бы 1 студента")
@@ -69,8 +67,7 @@ class Statement(title: String) : JFrame() {
                 a.setSize(250, 100)
                 a.isVisible = true
 
-            }
-            else {
+            } else {
                 gradeStudent = Array(numOfStudents) { Array(numCol) { "0" } }
                 val startNum = 1
                 mainInformation.add(tf.text)
@@ -103,13 +100,19 @@ class Statement(title: String) : JFrame() {
     }
 
     private fun readFromFile() {
-        val csvReader = BufferedReader(FileReader("test.csv"))
-        val csvParser = CSVParser(csvReader, CSVFormat.DEFAULT)
-        for (csvRecord in csvParser) {
-            val row = csvReader.readLine()
-            println(row)
+        val reader = BufferedReader(FileReader("test.csv"));
+        val csvParser = CSVParser(
+            reader, CSVFormat.DEFAULT
+                .withFirstRecordAsHeader()
+                .withIgnoreHeaderCase()
+                .withTrim()
+        )
+        for (record in csvParser) {
+            for (field in record) {
+                print("$field ")
+            }
+            println()
         }
-        csvReader.close()
     }
 
     private fun enter(numOfStudents: Int, startNum: Int) {
