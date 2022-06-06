@@ -288,7 +288,7 @@ class Statement(title: String) : JFrame() {
                     "Список студентов", "Контрольная работа 1", "Контрольная работа 2", "Контрольная работа 3",
                     "ИДЗ 1", "ИДЗ 2", "ИДЗ 3", "Дифф. зачёт"
                 )
-        );
+        )
         for (i in 0 until num) {
             val studentInformation: ArrayList<String> = mutableListOf<String>() as ArrayList<String>
             if (i == 0) studentInformation.add(listStudents[1])
