@@ -29,7 +29,8 @@ class Statement(title: String) : JFrame() {
         "Контрольная работа 1", "Контрольная работа 2", "Контрольная работа 3",
         "ИДЗ 1", "ИДЗ 2", "ИДЗ 3", "Дифф. зачёт"
     )
-    private var gradeList = mutableListOf("1", "2", "3", "4", "5")
+    //private var gradeList = mutableListOf("1", "2", "3", "4", "5")
+    private var gradeList = arrayOf<String>("","1", "2", "3", "4", "5")
     private val numCol = 7
     private lateinit var gradeStudent: Array<Array<String>>
 
@@ -186,7 +187,7 @@ class Statement(title: String) : JFrame() {
 
         val teacherName = mainInformation[0]
         val nameLabel = JLabel(
-            "<html> <p align=\"center\"><font face='calibri'>Преподаватель: <br>" +
+            "<html> <p align=\"center\"><font face='calibre'>Преподаватель: <br>" +
                     "$teacherName</font></p> </html>"
         )
         nameLabel.verticalAlignment = JLabel.CENTER
@@ -198,7 +199,7 @@ class Statement(title: String) : JFrame() {
 
         val objectName = mainInformation[1]
         val objectNameLabel = JLabel(
-            "<html> <p align=\"center\"><font face='calibri'> Название предмета: <br>" +
+            "<html> <p align=\"center\"><font face='calibre'> Название предмета: <br>" +
                     "$objectName</font></p> </html>"
         )
         objectNameLabel.verticalAlignment = JLabel.CENTER
@@ -223,9 +224,7 @@ class Statement(title: String) : JFrame() {
         mainPanel.add(panelForMainInformation, BorderLayout.NORTH)
 
         val tab = JPanel(GridLayout((numOfStudents + 1), numCol, 1, 1))
-        val buttons = mutableListOf<MutableList<JButton>>()
         for (i in 0 until (numOfStudents + 1)) {
-            val buttonsRow = mutableListOf<JButton>()
             for (j in 0 until numCol) {
                 if (j == 0) {
                     val tempListStudents = listStudents[i]
@@ -244,33 +243,14 @@ class Statement(title: String) : JFrame() {
                     tab.add(cell)
                     continue
                 }
-                val cellButton = JButton("")
+                val cellButton = JComboBox(gradeList)
                 //выставление оценки
                 cellButton.addActionListener()
                 {
-                    val box = JDialog(frame, "Оценка")
-                    val tempPanel = JPanel()
-                    tempPanel.layout = GridLayout(5, 1, 1, 1)
-                    box.add(tempPanel, BorderLayout.CENTER)
-                    box.setSize(100, 250)
-                    box.setLocationRelativeTo(null)
-                    for (w in 0 until gradeList.size) {
-                        val grade = JButton(gradeList[w])
-                        tempPanel.add(grade)
-                        grade.addActionListener()
-                        {
-                            if (gradeList[w] == "1") smallMessageBox("Неужели настолько всё плохо?")
-                            cellButton.text = gradeList[w]
-                            gradeStudent[i - 1][j] = gradeList[w]
-                            box.isVisible = false
-                        }
-                    }
-                    box.isVisible = true
+                    gradeStudent[i-1][j] = cellButton.selectedItem.toString()
                 }
-                buttonsRow.add(cellButton)
                 tab.add(cellButton)
             }
-            buttons.add(buttonsRow)
         }
 
         mainPanel.add(tab, BorderLayout.CENTER)
